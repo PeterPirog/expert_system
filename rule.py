@@ -1,4 +1,4 @@
-from condition import Condition
+from condition import Condition,OR
 from typing import Dict, List
 
 class Rule:
@@ -12,14 +12,21 @@ class Rule:
     def fire(self, input_values: Dict[str, float]) -> Dict[str, float]:
         min_truth_value = 1.0
         for condition in self.conditions:
-            truth_value = condition.evaluate(input_values)
+            if isinstance(condition, OR):
+                truth_value = condition.evaluate(input_values)
+            else:
+                truth_value = condition.evaluate(input_values)
             min_truth_value = min(min_truth_value, truth_value)
         return {conclusion: min_truth_value * weight for conclusion, weight in self.conclusions.items()}
 
     def is_conflicting(self, other: 'Rule') -> bool:
-        conflicting_conditions = []
-        for self_condition in self.conditions:
-            for other_condition in other.conditions:
-                if self_condition.is_conflicting(other_condition):
-                    conflicting_conditions.append((self_condition, other_condition))
-        return len(conflicting_conditions) > 0
+        return set(self.conditions) == set(other.conditions) and self.conclusions != other.conclusions
+
+    def evaluate(self, input_values: Dict[str, float]) -> float:
+        truth_value = 1.0
+        for condition in self.conditions:
+            truth_value = min(truth_value, condition.evaluate(input_values))
+            if truth_value == 0.0:
+                break
+        return truth_value
+

@@ -50,11 +50,4 @@ class Condition:
             return 1.0 if fact_value <= self.value else 0.0
         else:
             return 0.0
-class OR:
-    def __init__(self, *conditions):
-        self.conditions = conditions
-
-    def evaluate(self, input_values):
-        return any(condition.evaluate(input_values) for condition in self.conditions)
-
 
