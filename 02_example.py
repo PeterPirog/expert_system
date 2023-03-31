@@ -679,11 +679,16 @@ rules = [
 
 expert_system = ExpertSystem(rules, facts)
 input_values = {fact.name: fact.value for fact in facts}
-inferred_results = expert_system.infer(input_values, method="fuzzy")
-print(inferred_results)
 
+inferred_results = expert_system.infer(input_values, method="fuzzy")
+print("Wnioskowanie na podstawie wiedzy eksperckiej (metoda fuzzy):")
+for conclusion, truth_value in inferred_results.items():
+    print(f"{conclusion}: {truth_value}")
 
 
 """
+
+inferred_results = expert_system.infer(input_values, method="fuzzy")
+print(inferred_results)
 W oparciu o "2018 ESC/ESH Guidelines for the management of arterial hypertension" (European Heart Journal, Volume 39, Issue 33, 1 September 2018, Pages 3021–3104) stworzyłem kolejne reguły. 
 """
